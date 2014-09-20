@@ -1,5 +1,4 @@
 /*
-  
  Parts of code and Library from the openenergymonitor.org project
  Licence: GNU GPL V3 Author: Trystan Lea
  */
@@ -25,8 +24,8 @@ void setup()
   // while (!Serial) {}
   // wait for serial port to connect. Needed for Leonardo only
 
-  Serial.println("emonTX Shield CT123 Voltage Serial Only example"); 
-  Serial.println("OpenEnergyMonitor.org");
+  //Serial.println("emonTX Shield CT123 Voltage"); 
+  //Serial.println("OpenEnergyMonitor.org");
 
   // Calibration factor = CT ratio / burden resistance = (100A / 0.05A) / 33 Ohms = 60.606
   ct1.current(1, 15.491); //Solar Burden Calculated Value:16.949 //Done
@@ -43,6 +42,9 @@ void setup()
 
 void loop() 
 { 
+  
+    unsigned long currentMillis = millis();
+  if(currentMillis - previousMillis > 5000) {
   // Calculate all. No.of crossings, time-out 
   ct1.calcVI(20,2000);                                                  
   ct2.calcVI(20,2000);
@@ -55,6 +57,7 @@ void loop()
    Serial.println( ct3.realpower )
    Serial.println( ct4.realpower )
    */
+   /*
   // Print power 
   Serial.print(ct1.realPower);     
   Serial.print(" "); 
@@ -98,15 +101,16 @@ void loop()
 
   Serial.println();
   // Available properties: ct1.realPower, ct1.apparentPower, ct1.powerFactor, ct1.Irms and ct1.Vrms
+  */
+  }
 
-  unsigned long currentMillis = millis();
   if(currentMillis - previousMillis > interval) {
     //     digitalWrite(7, LOW); //wake xbee
 
     previousMillis = currentMillis;  
 
 
-  char Buffer[20];
+  char Buffer[128];
   char Buffer2[80];
   
     dtostrf(ct1.realPower, 7, 2, Buffer);
@@ -131,6 +135,13 @@ void loop()
   
     ZBTxRequest zbtx = ZBTxRequest(Broadcast, (uint8_t *)Buffer2, strlen(Buffer2));
     xbee.send(zbtx);
+     delay(5);
+ /*   
+     Serial.println();
+      Serial.println(Buffer);
+         Serial.println();
+         Serial.println(Buffer2);
+   */
   }
 
     //     digitalWrite(7, HIGH); //sleepxbee
