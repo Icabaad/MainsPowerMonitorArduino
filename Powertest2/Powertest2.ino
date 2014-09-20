@@ -1,19 +1,14 @@
 /*
-  EmonTx CT123 Voltage Serial Only example
   
-  Part of the openenergymonitor.org project
-  Licence: GNU GPL V3
-  
-  Author: Trystan Lea
+  Parts of code and Library from the openenergymonitor.org project
+  Licence: GNU GPL V3 Author: Trystan Lea
 */
 
 #include "EmonLib.h"
-
+#include <XBee.h>
 // Create  instances for each CT channel
 EnergyMonitor ct1,ct2,ct3, ct4;
-
-// On-board emonTx LED
-const int LEDpin = 9;                                                    
+                                      
 
 void setup() 
 {
@@ -25,20 +20,16 @@ void setup()
   Serial.println("OpenEnergyMonitor.org");
   
   // Calibration factor = CT ratio / burden resistance = (100A / 0.05A) / 33 Ohms = 60.606
-  ct1.current(1, 15.491); //Solar 16.949 //Done
+  ct1.current(1, 15.491); //Solar Burden Calculated Value:16.949 //Done
   ct2.current(2, 29.18); //Powerpoint  29.411   //Done                               
-  ct3.current(3, 20.07); //heat 22.727 //done
-  ct4.current(4, 51.4545); //total 60.606 //Done
+  ct3.current(3, 20.07); //heat 22.727 //Done
+  ct4.current(4, 51.445); //total 60.606 //Done
   
   // (ADC input, calibration, phase_shift)
-  ct1.voltage(5, 259.7, 1.7);                                
-  ct2.voltage(5, 259.7, 1.7);                                
-  ct3.voltage(5, 259.7, 1.7);
-  ct4.voltage(5, 259.7, 1.7);
-  
-  // Setup indicator LED
-  pinMode(LEDpin, OUTPUT);                                              
-  digitalWrite(LEDpin, HIGH);                                                                                  
+  ct1.voltage(5, 259.7, 1.265);  //done                              
+  ct2.voltage(5, 259.7, 1.2);                                
+  ct3.voltage(5, 259.7, 1.23); //done
+  ct4.voltage(5, 259.7, 1.2); //done
 }
 
 void loop() 
@@ -58,27 +49,43 @@ Serial.println( ct4.realpower )
   // Print power 
   Serial.print(ct1.realPower);     
   Serial.print(" "); 
+   Serial.print(ct1.apparentPower);
+     Serial.print(" "); 
     Serial.print(ct1.Vrms); 
   Serial.print(" "); 
-      Serial.println(ct1.Irms); 
+      Serial.print(ct1.Irms); 
+       Serial.print(" "); 
+    Serial.println(ct1.powerFactor); 
   
-  Serial.print(ct2.realPower);
-    Serial.print(" "); 
-  Serial.print(ct2.Vrms); 
-    Serial.print(" "); 
-      Serial.println(ct2.Irms); 
-  
-  Serial.print(ct3.realPower);
+  Serial.print(ct2.realPower);     
   Serial.print(" "); 
+   Serial.print(ct2.apparentPower);
+     Serial.print(" "); 
+    Serial.print(ct2.Vrms); 
+  Serial.print(" "); 
+      Serial.print(ct2.Irms); 
+       Serial.print(" "); 
+    Serial.println(ct1.powerFactor); 
+  
+  Serial.print(ct3.realPower);     
+  Serial.print(" "); 
+   Serial.print(ct3.apparentPower);
+     Serial.print(" "); 
     Serial.print(ct3.Vrms); 
-      Serial.print(" "); 
-      Serial.println(ct3.Irms); 
+  Serial.print(" "); 
+      Serial.print(ct3.Irms); 
+       Serial.print(" "); 
+    Serial.println(ct3.powerFactor); 
 
-  Serial.print(ct4.realPower);
-  Serial.print(" ");   
+  Serial.print(ct4.realPower);     
+  Serial.print(" "); 
+   Serial.print(ct4.apparentPower);
+     Serial.print(" "); 
     Serial.print(ct4.Vrms); 
-      Serial.print(" "); 
-      Serial.println(ct4.Irms); 
+  Serial.print(" "); 
+      Serial.print(ct4.Irms); 
+       Serial.print(" "); 
+    Serial.println(ct4.powerFactor); 
 
 //  Serial.print(ct1.Vrms);
   Serial.println();
