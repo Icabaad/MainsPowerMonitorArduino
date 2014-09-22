@@ -111,16 +111,16 @@ void loop()
 
 
   char Buffer[128];
-  char Buffer2[81];
+  char Buffer2[128];
   
-    dtostrf(ct1.realPower, 7, 2, Buffer);
+    dtostrf(ct1.realPower, 8, 2, Buffer);
     strcpy(Buffer2, Buffer);
     strcat(Buffer2, ",");
     strcat(Buffer2, dtostrf(ct2.realPower, 8, 2, Buffer)); 
     strcat(Buffer2, ","); 
-    strcat(Buffer2, dtostrf(ct3.realPower, 7, 2, Buffer)); 
+    strcat(Buffer2, dtostrf(ct3.realPower, 8, 2, Buffer)); 
     strcat(Buffer2, ","); 
-    strcat(Buffer2, dtostrf(ct4.realPower, 7, 2, Buffer)); 
+    strcat(Buffer2, dtostrf(ct4.realPower, 8, 2, Buffer)); 
     strcat(Buffer2, ","); 
     strcat(Buffer2, dtostrf(ct1.Irms, 5, 2, Buffer)); 
     strcat(Buffer2, ","); 
@@ -131,7 +131,7 @@ void loop()
     strcat(Buffer2, dtostrf(ct4.Irms, 5, 2, Buffer)); 
     strcat(Buffer2, ","); 
     strcat(Buffer2, dtostrf(ct1.Vrms, 6, 2, Buffer)); 
-    strcat(Buffer2, "\r"); 
+   // strcat(Buffer2, "\r"); 
   
     ZBTxRequest zbtx = ZBTxRequest(Broadcast, (uint8_t *)Buffer2, strlen(Buffer2));
     xbee.send(zbtx);
