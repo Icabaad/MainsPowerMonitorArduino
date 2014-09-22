@@ -8,14 +8,12 @@
 
 //XBEE
 XBee xbee = XBee();
-// This is the XBee broadcast address.  You can use the address
-// of any device you have also.
 XBeeAddress64 Broadcast = XBeeAddress64(0x00000000, 0x0000ffff);
 
 // Create  instances for each CT channel
 EnergyMonitor ct1,ct2,ct3, ct4;
 
-int interval = 10000;
+int interval = 10000; //10 Seconds. Change your update interval here.
 long previousMillis = 0;
 
 void setup() 
@@ -40,79 +38,20 @@ void setup()
   ct4.voltage(5, 259.7, 1.2); //done
 }
 
-void loop() 
-{ 
-  
-    unsigned long currentMillis = millis();
+void loop() { 
+  unsigned long currentMillis = millis();
   if(currentMillis - previousMillis > 5000) {
-  // Calculate all. No.of crossings, time-out 
-  ct1.calcVI(20,2000);                                                  
-  ct2.calcVI(20,2000);
-  ct3.calcVI(20,2000);
-  ct4.calcVI(20,2000);
-  /*   
-   Serial.println("real Power, Apparent Power, RMS Voltage, RMS Current, Power Factor");
-   Serial.println( ct1.realpower )
-   Serial.println( ct2.realpower )
-   Serial.println( ct3.realpower )
-   Serial.println( ct4.realpower )
-   */
-   /*
-  // Print power 
-  Serial.print(ct1.realPower);     
-  Serial.print(" "); 
-  Serial.print(ct1.apparentPower);
-  Serial.print(" "); 
-  Serial.print(ct1.Vrms); 
-  Serial.print(" "); 
-  Serial.print(ct1.Irms); 
-  Serial.print(" "); 
-  Serial.println(ct1.powerFactor); 
-
-  Serial.print(ct2.realPower);     
-  Serial.print(" "); 
-  Serial.print(ct2.apparentPower);
-  Serial.print(" "); 
-  Serial.print(ct2.Vrms); 
-  Serial.print(" "); 
-  Serial.print(ct2.Irms); 
-  Serial.print(" "); 
-  Serial.println(ct1.powerFactor); 
-
-  Serial.print(ct3.realPower);     
-  Serial.print(" "); 
-  Serial.print(ct3.apparentPower);
-  Serial.print(" "); 
-  Serial.print(ct3.Vrms); 
-  Serial.print(" "); 
-  Serial.print(ct3.Irms); 
-  Serial.print(" "); 
-  Serial.println(ct3.powerFactor); 
-
-  Serial.print(ct4.realPower);     
-  Serial.print(" "); 
-  Serial.print(ct4.apparentPower);
-  Serial.print(" "); 
-  Serial.print(ct4.Vrms); 
-  Serial.print(" "); 
-  Serial.print(ct4.Irms); 
-  Serial.print(" "); 
-  Serial.println(ct4.powerFactor); 
-
-  Serial.println();
-  // Available properties: ct1.realPower, ct1.apparentPower, ct1.powerFactor, ct1.Irms and ct1.Vrms
-  */
+    // Calculate all. No.of crossings, time-out 
+    ct1.calcVI(20,2000);                                                  
+    ct2.calcVI(20,2000);
+    ct3.calcVI(20,2000);
+    ct4.calcVI(20,2000);
   }
 
   if(currentMillis - previousMillis > interval) {
-    //     digitalWrite(7, LOW); //wake xbee
-
     previousMillis = currentMillis;  
-
-
-  char Buffer[128];
-  char Buffer2[128];
-  
+    char Buffer[128];
+    char Buffer2[128];
     dtostrf(ct1.realPower, 8, 2, Buffer);
     strcpy(Buffer2, Buffer);
     strcat(Buffer2, ",");
@@ -131,22 +70,63 @@ void loop()
     strcat(Buffer2, dtostrf(ct4.Irms, 5, 2, Buffer)); 
     strcat(Buffer2, ","); 
     strcat(Buffer2, dtostrf(ct1.Vrms, 6, 2, Buffer)); 
-   // strcat(Buffer2, "\r"); 
-  
+    // strcat(Buffer2, "\r"); 
     ZBTxRequest zbtx = ZBTxRequest(Broadcast, (uint8_t *)Buffer2, strlen(Buffer2));
     xbee.send(zbtx);
-   //  delay(13);
- /*   
-     Serial.println();
-      Serial.println(Buffer);
-         Serial.println();
-         Serial.println(Buffer2);
-   */
+    Serial.flush();
   }
-
-    //     digitalWrite(7, HIGH); //sleepxbee
-  
-
- // delay(5000);
 }
+
+/*   
+ Serial.println("real Power, Apparent Power, RMS Voltage, RMS Current, Power Factor");
+ Serial.println( ct1.realpower )
+ Serial.println( ct2.realpower )
+ Serial.println( ct3.realpower )
+ Serial.println( ct4.realpower )
+ */
+/*
+  // Print power 
+ Serial.print(ct1.realPower);     
+ Serial.print(" "); 
+ Serial.print(ct1.apparentPower);
+ Serial.print(" "); 
+ Serial.print(ct1.Vrms); 
+ Serial.print(" "); 
+ Serial.print(ct1.Irms); 
+ Serial.print(" "); 
+ Serial.println(ct1.powerFactor); 
+ 
+ Serial.print(ct2.realPower);     
+ Serial.print(" "); 
+ Serial.print(ct2.apparentPower);
+ Serial.print(" "); 
+ Serial.print(ct2.Vrms); 
+ Serial.print(" "); 
+ Serial.print(ct2.Irms); 
+ Serial.print(" "); 
+ Serial.println(ct1.powerFactor); 
+ 
+ Serial.print(ct3.realPower);     
+ Serial.print(" "); 
+ Serial.print(ct3.apparentPower);
+ Serial.print(" "); 
+ Serial.print(ct3.Vrms); 
+ Serial.print(" "); 
+ Serial.print(ct3.Irms); 
+ Serial.print(" "); 
+ Serial.println(ct3.powerFactor); 
+ 
+ Serial.print(ct4.realPower);     
+ Serial.print(" "); 
+ Serial.print(ct4.apparentPower);
+ Serial.print(" "); 
+ Serial.print(ct4.Vrms); 
+ Serial.print(" "); 
+ Serial.print(ct4.Irms); 
+ Serial.print(" "); 
+ Serial.println(ct4.powerFactor); 
+ 
+ Serial.println();
+ // Available properties: ct1.realPower, ct1.apparentPower, ct1.powerFactor, ct1.Irms and ct1.Vrms
+ */
 
